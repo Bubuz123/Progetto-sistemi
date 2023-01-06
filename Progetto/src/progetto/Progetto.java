@@ -13,11 +13,12 @@ import java.io.*;
 public class Progetto {
 
     static int TabellaOriginale[][]; //Tabella originale contenente i costi dei collegamenti
-    static int Intermedio[][]; //Tabella intermedia (Utilizzata per l'ordinamento)
+    static int Intermedio[][]; //Tabella intermedia (Utilizzata per l'ordinamento) (Contiene i collegamenti)
     static int RoutingTable[][]; //Tabella finale
     static int Nodi; //Numero di nodi
 
     public static void main(String[] args) throws IOException {
+        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); //Lettore input
 
         System.out.println("Inserisci numero di nodi: ");
@@ -52,14 +53,14 @@ public class Progetto {
         }
 
         //Aggiungo i valori alle altre due tabelle
-        for (int i = 0; i < Nodi; i++) { //COMMENTARE
+        for (int i = 0; i < Nodi; i++) {
             for (int j = 0; j < Nodi; j++) {
                 if (i == j) {
-                    RoutingTable[i][j] = 0; 
-                    Intermedio[i][j] = i;
+                    RoutingTable[i][j] = 0; //Metto il costo per loro stessi a 0
+                    Intermedio[i][j] = i; //Segno i collegamenti
                 } else {
-                    RoutingTable[i][j] = 9999;
-                    Intermedio[i][j] = 100;
+                    RoutingTable[i][j] = 9999; //Setto il resto dei costi ad "Infinito"
+                    Intermedio[i][j] = 100; //Segno un collegamento impossibile
                 }
             }
         }
@@ -75,17 +76,17 @@ public class Progetto {
     }
 
     static void Aggiornatabella(int Nodo) { //Passaggio intermedio per l'ordinamento
-        for (int i = 0; i < Nodi; i++) { //COMMENTARE
-            if (TabellaOriginale[Nodo][i] != 9999) {
-                int dist = TabellaOriginale[Nodo][i];
+        for (int i = 0; i < Nodi; i++) {
+            if (TabellaOriginale[Nodo][i] != 9999) { //Se il costo non è infinito
+                int dist = TabellaOriginale[Nodo][i]; //Prendo il costo
                 for (int j = 0; j < Nodi; j++) {
-                    int dist2 = RoutingTable[i][j];
-                    if (Intermedio[i][j] == Nodo) {
-                        dist2 = 9999;
+                    int dist2 = RoutingTable[i][j]; //Prendo il costo della Routing Table
+                    if (Intermedio[i][j] == Nodo) { //Se il collegamento è con il nodo stesso
+                        dist2 = 9999; //Metto un costo "infito" così da saltare il prossimo if
                     }
-                    if (dist + dist2 < RoutingTable[Nodo][j]) {
-                        RoutingTable[Nodo][j] = dist + dist2;
-                        Intermedio[Nodo][j] = i;
+                    if (dist + dist2 < RoutingTable[Nodo][j]) { //Se i costi sono minori di quelli attuali
+                        RoutingTable[Nodo][j] = dist + dist2; //Li setto
+                        Intermedio[Nodo][j] = i; //E creo il collegamento 
                     }
                 }
             }
