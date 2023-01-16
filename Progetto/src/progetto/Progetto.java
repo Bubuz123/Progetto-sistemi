@@ -5,6 +5,7 @@
 package progetto;
 
 import java.io.*;
+import java.util.Scanner;
 
 /**
  *
@@ -15,14 +16,21 @@ public class Progetto {
     static int TabellaOriginale[][]; //Tabella originale contenente i costi dei collegamenti
     static int Intermedio[][]; //Tabella intermedia (Utilizzata per l'ordinamento) (Contiene i collegamenti)
     static int RoutingTable[][]; //Tabella finale
-    static int Nodi; //Numero di nodi
+    static int Nodi = 0; //Numero di nodi
 
     public static void main(String[] args) throws IOException {
         
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); //Lettore input
 
-        System.out.println("Inserisci numero di nodi: ");
-        Nodi = Integer.parseInt(br.readLine()); //Chiedo il numero di nodi
+        File myObj = new File("test.csv"); //File csv da cui legge i nodi
+        Scanner s = new Scanner(myObj);
+        String str = "";
+        while (s.hasNextLine()) {
+            str += s.nextLine(); //Salva i collegamenti
+            Nodi++; //Conta quanti nodi ci sono
+        }
+        s.close();
+
 
         //Creazione del grafico
         TabellaOriginale = new int[Nodi][Nodi]; //Inizializzo la tabella orginale
@@ -39,17 +47,16 @@ public class Progetto {
             }
         }
 
-        for (int i = 0; i < Nodi; i++) { //Chiedo dati per ogni nodo (UN SOLO COLLEGAMENTO A NODO)
-            System.out.println("Nodo " + (i + 1) + ":");
+        String[] split = str.split(";"); //Creo un vettore contenente ogni linea
+        for (int i = 0; i < Nodi; i++) { //Prendo i costi per ogni nodo
+            
+            String[] split2 = split[i].split(","); //Prendo ogni parte di ogni linea
+            int x = Integer.parseInt(split2[0])-1; //Prendo l'origine
+            int d = Integer.parseInt(split2[1])-1; //Prendo la destinazione
+            int c = Integer.parseInt(split2[2]); //Prendo il costo
 
-            System.out.print("Nodo di destinazione: "); //Chiedo il nodo di destinazione
-            int d = Integer.parseInt(br.readLine()) - 1;
-
-            System.out.print("Costo: "); //Chiedo il costo
-            int c = Integer.parseInt(br.readLine());
-
-            TabellaOriginale[i][d] = c; //Setto il costo dal nodo alla destinazione
-            TabellaOriginale[d][i] = c; //Setto il costo dalla destinazione al nodo
+            TabellaOriginale[x][d] = c; //Setto il costo dal nodo alla destinazione
+            TabellaOriginale[d][x] = c; //Setto il costo dalla destinazione al nodo
         }
 
         //Aggiungo i valori alle altre due tabelle
