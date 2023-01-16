@@ -88,10 +88,7 @@ public class Progetto {
                 int dist = TabellaOriginale[Nodo][i]; //Prendo il costo
                 for (int j = 0; j < Nodi; j++) {
                     int dist2 = RoutingTable[i][j]; //Prendo il costo della Routing Table
-                    if (Intermedio[i][j] == Nodo) { //Se il collegamento è con il nodo stesso
-                        dist2 = 9999; //Metto un costo "infito" così da saltare il prossimo if
-                    }
-                    if (dist + dist2 < RoutingTable[Nodo][j]) { //Se i costi sono minori di quelli attuali
+                    if (dist + dist2 < RoutingTable[Nodo][j] && Intermedio[i][j] != Nodo) { //Se i costi sono minori di quelli attuali e non è collegato con se stesso
                         RoutingTable[Nodo][j] = dist + dist2; //Li setto
                         Intermedio[Nodo][j] = i; //E creo il collegamento 
                     }
@@ -102,7 +99,7 @@ public class Progetto {
 
     static void Aggiorna() { //Ordina la Routing Table
         int k = 0;
-        for (int i = 0; i < 4 * Nodi; i++) { //Ordino la tabella 4 volte
+        for (int i = 0; i < 4 * Nodi; i++) { //Ordino la tabella 4 volte per essere sicuro (numero minimo)
             Aggiornatabella(k); //Passaggio intermedio per l'ordinamento
             k++;
             if (k == Nodi) { //Quando raggiunge il nodo finale ricomincia da 0
